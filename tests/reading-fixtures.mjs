@@ -1,0 +1,5 @@
+// Tiny, original PDF fixtures; no third-party books or game assets.
+export function pdfFixture(scan=false,count=2){
+ const font=count+3,objects=['<< /Type /Catalog /Pages 2 0 R >>',`<< /Type /Pages /Kids [${Array.from({length:count},(_,i)=>`${i+3} 0 R`).join(' ')}] /Count ${count} >>`,...Array.from({length:count},(_,i)=>`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${font} 0 R >> >> /Contents ${font+1+i} 0 R >>`),'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',...Array.from({length:count},(_,i)=>{const text=scan?'':`BT /F1 18 Tf 40 740 Td (Reading material ${i===0?'one':i===1?'two':i+1}) Tj ET`;return `<< /Length ${text.length} >>\nstream\n${text}\nendstream`;})];
+ let data='%PDF-1.4\n',offsets=[0];for(let i=0;i<objects.length;i++){offsets.push(Buffer.byteLength(data));data+=`${i+1} 0 obj\n${objects[i]}\nendobj\n`;}const xref=Buffer.byteLength(data);data+=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`+offsets.slice(1).map(n=>String(n).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;return Buffer.from(data);
+}

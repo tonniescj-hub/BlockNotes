@@ -30,3 +30,18 @@
 ## 讲台与分类维护（2026-10-10）
 
 独立讲台复用现有 Three.js / R3F 场景、相机与模型，并复用 `BookEditor` 的 Tiptap / ProseMirror 和 DOM 分页测量。仅增加固定镜头预设与选书界面，没有新增编辑器或依赖。自定义书架删除使用既有 SQLite 事务和 revision 机制，在一个事务内迁移所有状态笔记并删除空分类；无需修改数据库版本或旧备份格式。
+
+
+## 2026-11-13 阅读资料更新
+
+采用 npm 固定版本依赖，不复制整套 GitHub 项目：
+
+| 依赖 | 版本 | 来源 | 用途 |
+| --- | --- | --- | --- |
+| pdfjs-dist | 6.5.438 | https://github.com/mozilla/pdf.js | PDF 页面、文字层、目录与文字提取；Apache-2.0 |
+| mammoth | 1.13.0 | https://github.com/mwilliamson/mammoth.js | DOCX 内容转换；BSD-2-Clause；禁用嵌入样式映射和外部文件访问 |
+| docx | 9.15.3 | https://github.com/dolanmiu/docx | 标准 DOCX 生成；MIT |
+| sanitize-html | 2.18.2 | https://github.com/apostrophecms/sanitize-html | 转换及恢复 HTML 白名单清理；MIT |
+| cheerio | 1.2.0 | https://github.com/cheeriojs/cheerio | 目录、稳定块 ID 与文本提取；MIT |
+
+继续使用现有 Tiptap 编辑器和 yauzl ZIP 检查。依赖及传递依赖许可证由 `scripts/collect-licenses.mjs` 保留于 `docs/licenses/`。boolbase 1.0.0 的 npm 包未带独立许可证，保留上游 https://raw.githubusercontent.com/fb55/boolbase/master/LICENSE 的原始 ISC 文本；isarray 1.0.0 的许可证来自该版本 README。

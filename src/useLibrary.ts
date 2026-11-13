@@ -4,6 +4,7 @@ import type {Note,Snapshot} from './types'
 const RECOVERY='blocknotes.pending.v1'
 export default function useLibrary(){
  const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[status,setStatus]=useState('正在打开书房…'),[error,setError]=useState(''),[dirty,setDirty]=useState(false)
+ const beforeClose=useRef<()=>Promise<void>>(async()=>{})
  const current=useRef<Snapshot|null>(null),pending=useRef(new Map<string,{note:Note;version:number}>()),running=useRef<Promise<void>|null>(null),timer=useRef<ReturnType<typeof setTimeout>|null>(null),counter=useRef(0)
  const publish=useCallback((s:Snapshot)=>{current.current=s;setSnapshot(s)},[])
  const persistDraft=useCallback(()=>{try{if(pending.current.size)localStorage.setItem(RECOVERY,JSON.stringify([...pending.current.values()].map(v=>v.note)));else localStorage.removeItem(RECOVERY)}catch{setError('草稿恢复缓存不可用。请保持窗口打开直到保存成功。')}},[])
@@ -49,8 +50,8 @@ export default function useLibrary(){
  useEffect(()=>{
   const before=(e:BeforeUnloadEvent)=>{if(pending.current.size){persistDraft();e.preventDefault();e.returnValue=''}}
   window.addEventListener('beforeunload',before)
-  const unsubscribe=window.blocknotes?.onClose(()=>{flush().then(()=>window.blocknotes?.readyToClose()).catch(()=>{})})
+  const unsubscribe=window.blocknotes?.onClose(()=>{beforeClose.current().then(()=>flush()).then(()=>window.blocknotes?.readyToClose()).catch(()=>{})})
   return()=>{window.removeEventListener('beforeunload',before);unsubscribe?.()}
  },[flush,persistDraft])
- return{snapshot,current,status,error,setError,dirty,edit,flush,command,refresh}
+ return{beforeClose,snapshot,current,status,error,setError,dirty,edit,flush,command,refresh}
 }

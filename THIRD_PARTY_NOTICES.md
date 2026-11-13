@@ -87,3 +87,8 @@ game assets, not software licensed under the dependency MIT notices.
 
 User-supplied screenshots are design references; no screenshot is used as the
 room background or shipped as a texture.
+
+
+## Reading documents (2026-11-13)
+
+PDF.js (`pdfjs-dist` 6.5.438, Apache-2.0), Mammoth (1.13.0, BSD-2-Clause), docx (9.15.3, MIT), sanitize-html (2.18.2, MIT), and Cheerio (1.2.0, MIT) are used as dependencies. Their original license texts and production dependency notices are retained in `docs/licenses/`; sources and reuse scope are recorded in `docs/reuse-map.md`. PDF.js CMaps, standard fonts and WebAssembly resources remain third-party assets under their accompanying upstream terms. No third-party books or user documents are bundled.

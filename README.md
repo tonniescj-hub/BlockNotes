@@ -4,7 +4,7 @@
 
 一间可以写笔记的 3D 方块书房。面向 Windows，笔记保存在本机 SQLite；通过书与笔记录、讲台阅读、书架分类、箱子归档。固定主视角，鼠标带来小幅平滑视差，没有角色漫游。
 
-当前为 **0.1.0 Windows x64 版本**。实际可下载文件见 [Releases](https://github.com/tonniescj-hub/BlockNotes/releases)，其他平台尚未验收。项目由 tonniescj-hub 发起和维护，免费分享；项目自身代码采用 MIT。
+当前预览版为 **0.2.1 Windows x64（阅读与笔记流程完善）**。[下载 0.2.1](https://github.com/tonniescj-hub/BlockNotes/releases/tag/v0.2.1)，全部版本见 [Releases](https://github.com/tonniescj-hub/BlockNotes/releases)，其他平台尚未验收。项目由 tonniescj-hub 发起和维护，免费分享；项目自身代码采用 MIT。
 
 **BlockNotes 不是 Minecraft 官方产品，未经 Mojang 或 Microsoft 批准，也不与其关联。** 项目源码、第三方代码与原版游戏资源的许可分别管理。
 
@@ -13,6 +13,9 @@
 [开始使用](docs/getting-started.md) · [功能教程](docs/user-guide.md) · [开发日志](docs/development-log.md) · [路线图](docs/roadmap.md) · [原创与许可声明](COPYRIGHT.md)
 
 ## 能做什么
+
+- 导入 Word `.docx` / PDF 学习资料，讲台阅读、目录、阅读位置记忆、划线和想法；扫描件支持页级心得。
+- 摘录携带出处加入读书笔记；笔记或摘录汇总导出 Word，支持调用本机 WPS／默认程序打开。
 
 - 书与笔：中文输入、富文本、翻页、末页新增空白页、防抖自动保存与 Ctrl+S 保存。
 - 讲台：独立 3D 阅读近景，左侧筛选笔记，右侧只读翻页；阅读不修改正文或笔记版本。

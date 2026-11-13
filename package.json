@@ -1,6 +1,6 @@
 {
   "name": "blocknotes",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
   "license": "MIT",
   "engines": {
@@ -9,9 +9,14 @@
   "type": "module",
   "description": "A local-first voxel study for your notes",
   "author": "tonniescj-hub",
-  "repository": { "type": "git", "url": "https://github.com/tonniescj-hub/BlockNotes.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tonniescj-hub/BlockNotes.git"
+  },
   "homepage": "https://github.com/tonniescj-hub/BlockNotes#readme",
-  "bugs": { "url": "https://github.com/tonniescj-hub/BlockNotes/issues" },
+  "bugs": {
+    "url": "https://github.com/tonniescj-hub/BlockNotes/issues"
+  },
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
@@ -20,7 +25,7 @@
     "audit:source": "node scripts/audit-public-source.mjs --history",
     "build": "npm run check && vite build",
     "start": "electron .",
-    "test": "node --test tests/storage.test.mjs tests/models.test.mjs tests/media.test.mjs tests/lighting.test.mjs tests/backup-http.test.mjs tests/public-source.test.mjs tests/resources.test.mjs",
+    "test": "node --test tests/storage.test.mjs tests/models.test.mjs tests/media.test.mjs tests/lighting.test.mjs tests/backup-http.test.mjs tests/public-source.test.mjs tests/resources.test.mjs tests/reading.test.mjs",
     "test:e2e": "playwright test",
     "pack": "npm run build && electron-builder --win dir",
     "portable": "npm run build && electron-builder --win portable",
@@ -32,10 +37,15 @@
     "@tiptap/core": "^3.31.4",
     "@tiptap/react": "^3.31.4",
     "@tiptap/starter-kit": "^3.31.4",
+    "cheerio": "1.2.0",
+    "docx": "9.15.3",
+    "mammoth": "1.13.0",
     "opentype.js": "2.0.0",
+    "pdfjs-dist": "6.5.438",
     "pngjs": "7.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "sanitize-html": "2.18.2",
     "stream-json": "3.7.0",
     "three": "^0.180.0",
     "yauzl": "3.4.0"
@@ -47,7 +57,7 @@
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.180.0",
     "@vitejs/plugin-react": "^5.0.0",
-    "electron": "44.7.0",
+    "electron": "44.11.3",
     "electron-builder": "^26.0.0",
     "esbuild": "^0.28.2",
     "typescript": "^5.9.0",

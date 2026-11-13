@@ -1,10 +1,10 @@
 import {useLayoutEffect,useRef,useState} from 'react'
 import BookEditor from './BookEditor'
 import Icon from './Icon'
-import type {Note,Shelf} from './types'
+import type {Note,Shelf,ReadingDocument} from './types'
 
-type Props={note?:Note;notes:Note[];shelves:Shelf[];busy:boolean;searchTerm:string;onSelect:(note:Note)=>void;onEdit:()=>void;onClose:()=>void}
-export default function LecternReader({note,notes,shelves,busy,searchTerm,onSelect,onEdit,onClose}:Props){
+type Props={documents:ReadingDocument[];onDocument:(id:string)=>void;note?:Note;notes:Note[];shelves:Shelf[];busy:boolean;searchTerm:string;onSelect:(note:Note)=>void;onEdit:()=>void;onClose:()=>void}
+export default function LecternReader({documents,onDocument,note,notes,shelves,busy,searchTerm,onSelect,onEdit,onClose}:Props){
  const [query,setQuery]=useState(''),[category,setCategory]=useState('all'),[collapsed,setCollapsed]=useState(false)
  const list=useRef<HTMLElement>(null)
  useLayoutEffect(()=>{list.current?.querySelector('[aria-current="true"]')?.scrollIntoView({block:'nearest'})},[note?.id,collapsed,category,query])
@@ -16,7 +16,7 @@ export default function LecternReader({note,notes,shelves,busy,searchTerm,onSele
    <input aria-label="筛选阅读笔记" placeholder="搜索书名、正文、标签…" value={query} onChange={e=>setQuery(e.target.value)}/>
    <select aria-label="阅读书架分类" value={category} onChange={e=>setCategory(e.target.value)}><option value="all">全部笔记</option>{shelves.map(sh=><option key={sh.id} value={sh.id}>{sh.name}</option>)}<option value="archived">归档箱</option></select>
    <div className="lectern-count">{visible.length} 本书</div>
-   <nav ref={list} className="lectern-note-list" aria-label="可阅读笔记">{visible.map(n=><button key={n.id} className={'lectern-note'+(note?.id===n.id?' current':'')} aria-label={`阅读 ${n.title||'未命名笔记'}`} aria-current={note?.id===n.id?'true':undefined} disabled={busy} onClick={()=>onSelect(n)}><span className="lectern-book-slot"><Icon name="book"/></span><span><strong>{n.title||'未命名笔记'}</strong><small>{n.status==='archived'?'已归档 · ':''}{shelves.find(sh=>sh.id===n.shelfId)?.name}</small></span></button>)}</nav>
+   <nav ref={list} className="lectern-note-list" aria-label="可阅读笔记">{documents.filter(d=>d.status!=='deleted'&&(category==='all'||category==='archived'&&d.status==='archived'||d.status==='active'&&d.shelfId===category)&&terms.every(t=>[d.title,...d.tags].join(' \n').normalize('NFKC').toLocaleLowerCase().includes(t))).map(d=><button key={d.id} className="lectern-note" disabled={busy} onClick={()=>onDocument(d.id)}><span className="lectern-book-slot"><Icon name="book"/></span><span><strong>{d.title}</strong><small>{d.kind.toUpperCase()} · 阅读资料</small></span></button>)}{visible.map(n=><button key={n.id} className={'lectern-note'+(note?.id===n.id?' current':'')} aria-label={`阅读 ${n.title||'未命名笔记'}`} aria-current={note?.id===n.id?'true':undefined} disabled={busy} onClick={()=>onSelect(n)}><span className="lectern-book-slot"><Icon name="book"/></span><span><strong>{n.title||'未命名笔记'}</strong><small>{n.status==='archived'?'已归档 · ':''}{shelves.find(sh=>sh.id===n.shelfId)?.name}</small></span></button>)}</nav>
    {!visible.length&&<p className="lectern-list-empty">{available.length?'没有匹配的笔记':'还没有笔记。用书与笔写下第一篇。'}</p>}
   </aside>}
   <section className="lectern-reading-area" aria-label="讲台阅读工作台">

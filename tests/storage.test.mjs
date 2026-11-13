@@ -36,7 +36,7 @@ test('删除书架：删除失败整体回滚，旧备份仍可恢复且反复�
  s.db.exec('DROP TRIGGER refuse_shelf_delete');s.run('deleteShelf',{id:'custom-rollback',expectedName:'保护数据',targetId:'main'})
  assert.deepEqual(s.run('restore',backup),{added:1,duplicates:0});assert.deepEqual(s.run('restore',backup),{added:0,duplicates:1});assert.equal(s.run('snapshot').notes.length,2);assert.ok(s.run('snapshot').notes.every(n=>n.plain==='原始正文'));assert.equal(s.db.prepare('PRAGMA foreign_key_check').all().length,0)
 })
-test('空库 migration、默认分类与真实 SQLite 文件',t=>{const s=fixture(t);const snap=s.run('snapshot');assert.equal(snap.notes.length,0);assert.equal(snap.shelves.length,2);assert.equal(s.db.prepare('PRAGMA user_version').get().user_version,2);assert.equal(readFileSync(s.filename).subarray(0,15).toString(),'SQLite format 3')})
+test('空库 migration、默认分类与真实 SQLite 文件',t=>{const s=fixture(t);const snap=s.run('snapshot');assert.equal(snap.notes.length,0);assert.equal(snap.shelves.length,2);assert.equal(s.db.prepare('PRAGMA user_version').get().user_version,3);assert.equal(readFileSync(s.filename).subarray(0,15).toString(),'SQLite format 3')})
 test('20 条中文/混合/长标题/空笔记，多书架和 1、2、3 字搜索',t=>{const s=fixture(t);for(let i=0;i<20;i++){s.run('create',{title:i===19?'很长的标题'.repeat(40):`第 ${i} 本 · A&B <书>`,doc:doc(i===0?'':`今天在书房中写下知识库 ${i}，你好，Minecraft & TypeScript。特殊符号 "<>\\%_😀"。`),tags:i%2?['想法','知识管理']:['学习'],shelfId:i%2?'ideas':'main'})}
  assert.equal(s.run('snapshot').notes.length,20);for(const q of ['知','知识','知识库','你好','房','想法','Ｍｉｎｅｃｒａｆｔ'])assert.ok(s.run('search',{query:q}).length>0,q)
  assert.equal(s.run('search',{query:'知识库'}).length,19);assert.equal(s.run('search',{query:'不存在的词'}).length,0);assert.equal(s.run('search',{query:'知识库 TypeScript'}).length,19)
@@ -123,8 +123,8 @@ test('BN-P1-02：后台导出仍为 schemaVersion 1，重新恢复不变更正�
 
 test('v1 数据库加法迁移不修改已有笔记，旧备份格式继续可用',t=>{
  const s=fixture(t),n=s.run('create',{title:'旧库保留',doc:doc('原文')}),backup=s.run('backup')
- s.db.exec('DROP TABLE restore_notes; DROP TABLE restore_shelves; PRAGMA user_version=1;')
- const migrated=openStore(path.dirname(s.filename));try{assert.equal(migrated.db.prepare('PRAGMA user_version').get().user_version,2);assert.deepEqual(migrated.run('snapshot').notes,[n]);assert.deepEqual(migrated.run('restore',backup),{added:0,duplicates:1});assert.ok(readdirSync(path.join(path.dirname(s.filename),'backups')).some(f=>f.startsWith('blocknotes-before-v2-')))}finally{migrated.close()}
+ s.db.exec('DROP TABLE reading_links; DROP TABLE reading_annotations; DROP TABLE reading_documents; DROP TABLE reading_assets; DROP TABLE reading_restores; DROP TABLE restore_notes; DROP TABLE restore_shelves; PRAGMA user_version=1;')
+ const migrated=openStore(path.dirname(s.filename));try{assert.equal(migrated.db.prepare('PRAGMA user_version').get().user_version,3);assert.deepEqual(migrated.run('snapshot').notes,[n]);assert.deepEqual(migrated.run('restore',backup),{added:0,duplicates:1});assert.ok(readdirSync(path.join(path.dirname(s.filename),'backups')).some(f=>f.startsWith('blocknotes-before-v2-')))}finally{migrated.close()}
 })
 
 test('BN-P1-01：两个来源 ID 的同名同内容冲突笔记，各保留自己的副本',t=>{
